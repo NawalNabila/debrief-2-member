@@ -36,7 +36,7 @@ public class MemberApplication implements CommandLineRunner {
     rpcServer.run("getBalance");
     rpcServer.run("decreaseBalance");
     rpcServer.run("increaseBalance");
-
+    rpcServer.run("sendOTP");
   }
 
 }

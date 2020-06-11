@@ -16,9 +16,9 @@ public interface OTPMapper {
     @Select("SELECT * FROM otp WHERE userId = #{id} AND code = #{code}")
     OTP getVerifyOTP(long userId, String code);
 
-    @Insert("INSERT INTO otp (userId, code, createdAt, updatedAt) VALUES (#{userId}, #{code}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO otp (userId, code, createdAt, updatedAt) VALUES (#{userId}, #{code}, NOW(), NOW())")
     void createOTP(OTP otp);
 
-    @Update("UPDATE otp SET code = #{code}, updatedAt = #{updatedAt} WHERE userId = #{userId}")
+    @Update("UPDATE otp SET code = #{code}, updatedAt = NOW() WHERE userId = #{userId}")
     void updateOTP(OTP otp);
 }
