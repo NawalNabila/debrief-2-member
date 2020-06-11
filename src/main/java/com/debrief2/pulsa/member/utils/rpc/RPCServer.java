@@ -1,11 +1,13 @@
 package com.debrief2.pulsa.member.utils.rpc;
 
 import com.debrief2.pulsa.member.exception.ServiceException;
+import com.debrief2.pulsa.member.model.OTP;
 import com.debrief2.pulsa.member.model.User;
 import com.debrief2.pulsa.member.payload.request.BalanceRequest;
 import com.debrief2.pulsa.member.payload.request.UserRequest;
 import com.debrief2.pulsa.member.payload.request.VerifyPinRequest;
 import com.debrief2.pulsa.member.payload.response.UserResponse;
+import com.debrief2.pulsa.member.service.OTPService;
 import com.debrief2.pulsa.member.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.*;
@@ -24,6 +26,9 @@ import java.nio.charset.StandardCharsets;
 public class RPCServer {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OTPService otpService;
 
     private static final Logger log = LoggerFactory.getLogger(RpcServer.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -93,6 +98,10 @@ public class RPCServer {
                             BalanceRequest increaseRequest = objectMapper.readValue(message, BalanceRequest.class);
                             userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
                             response = objectMapper.writeValueAsString("success");
+                            break;
+                        case "sendOTP":
+                            OTP otpResponse = otpService.sendOTP(Long.parseLong(message));
+                            response = objectMapper.writeValueAsString(otpResponse);
                             break;
                         default:
                             response = "Unknown service method";
