@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
         }
 
         //convert & validate phone
-        user.setUsername(validation.convertPhone(user.getUsername()));
-        if (!validation.phone(user.getUsername())) {
+        user.setPhone(validation.convertPhone(user.getPhone()));
+        if (!validation.phone(user.getPhone())) {
             throw new ServiceException("invalid phone number");
         }
 
@@ -63,23 +63,23 @@ public class UserServiceImpl implements UserService {
         }
 
         //check email & phone duplication
-        if (getByEmailOrUsername(user.getEmail()) != null || getByEmailOrUsername(user.getUsername()) != null) {
+        if (getByEmailOrUsername(user.getEmail()) != null || getByEmailOrUsername(user.getPhone()) != null) {
             throw new ServiceException("user already exist");
         }
 
         userMapper.createUser(user);
-        return getByUsername(user.getUsername());
+        return getByUsername(user.getPhone());
     }
 
     @Override
-    public UserResponse login(String username) throws ServiceException {
+    public UserResponse login(String phone) throws ServiceException {
         //convert & validate phone
-        username = validation.convertPhone(username);
-        if (!validation.phone(username)) {
+        phone = validation.convertPhone(phone);
+        if (!validation.phone(phone)) {
             throw new ServiceException("invalid phone number");
         }
 
-        UserResponse userResponse = userMapper.getUserByUsername(username);
+        UserResponse userResponse = userMapper.getUserByUsername(phone);
         if (userResponse == null)
             throw new ServiceException("incorrect phone number");
         return userResponse;

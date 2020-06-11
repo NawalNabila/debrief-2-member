@@ -9,7 +9,7 @@ public interface UserService {
     User getByEmailOrUsername(String emailOrUsername);
     UserResponse getByUsername(String username);
     UserResponse register(UserRequest userRequest) throws ServiceException;
-    UserResponse login(String username) throws ServiceException;
+    UserResponse login(String phone) throws ServiceException;
     UserResponse verifyPin(long id, int pin) throws ServiceException;
     UserResponse getProfile(long id) throws ServiceException;
     void createBalance(long id);

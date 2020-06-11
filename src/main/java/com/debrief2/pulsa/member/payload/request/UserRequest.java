@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class UserRequest {
     private String name;
     private String email;
-    private String username;
+    private String phone;
     private int pin;
 }

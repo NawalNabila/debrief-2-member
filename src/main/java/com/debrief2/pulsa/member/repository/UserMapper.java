@@ -16,7 +16,7 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE email = #{emailOrUsername} OR username = #{emailOrUsername} ORDER BY id DESC LIMIT 1")
     User getUserByEmailOrUsername(String emailOrUsername);
 
-    @Insert("INSERT INTO user (name, email, username, pin, createdAt) VALUES (#{name}, #{email}, #{username}, #{pin}, NOW())")
+    @Insert("INSERT INTO user (name, email, username, pin, createdAt) VALUES (#{name}, #{email}, #{phone}, #{pin}, NOW())")
     void createUser(UserRequest userRequest);
 
     @Select("SELECT * FROM user WHERE username = #{username} ORDER BY id DESC LIMIT 1")
