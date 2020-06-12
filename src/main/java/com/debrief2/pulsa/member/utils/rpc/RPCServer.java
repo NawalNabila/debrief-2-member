@@ -4,6 +4,7 @@ import com.debrief2.pulsa.member.exception.ServiceException;
 import com.debrief2.pulsa.member.model.OTP;
 import com.debrief2.pulsa.member.model.User;
 import com.debrief2.pulsa.member.payload.request.BalanceRequest;
+import com.debrief2.pulsa.member.payload.request.OTPRequest;
 import com.debrief2.pulsa.member.payload.request.UserRequest;
 import com.debrief2.pulsa.member.payload.request.VerifyPinRequest;
 import com.debrief2.pulsa.member.payload.response.UserResponse;
@@ -102,6 +103,15 @@ public class RPCServer {
                         case "sendOTP":
                             OTP otpResponse = otpService.sendOTP(Long.parseLong(message));
                             response = objectMapper.writeValueAsString(otpResponse);
+                            break;
+                        case "getOTP":
+                            OTP getOTPResponse = otpService.getOTP(Long.parseLong(message));
+                            response = objectMapper.writeValueAsString(getOTPResponse);
+                            break;
+                        case "verifyOTP":
+                            OTPRequest otpRequest = objectMapper.readValue(message, OTPRequest.class);
+                            OTP verifyOTPResponse = otpService.verifyOTP(otpRequest.getId(), otpRequest.getCode());
+                            response = objectMapper.writeValueAsString(verifyOTPResponse);
                             break;
                         default:
                             response = "Unknown service method";

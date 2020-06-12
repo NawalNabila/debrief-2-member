@@ -8,5 +8,5 @@ public interface OTPService {
     void updateOTP(OTP otp);
     OTP sendOTP(long userId) throws ServiceException;
     OTP getOTP(long userId) throws ServiceException;
-    OTP verifyOTP(long userId, String code);
+    OTP verifyOTP(long userId, String code) throws ServiceException;
 }
