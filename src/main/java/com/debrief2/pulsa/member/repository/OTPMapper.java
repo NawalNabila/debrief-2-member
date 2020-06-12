@@ -13,12 +13,12 @@ public interface OTPMapper {
     @Select("SELECT * FROM otp WHERE userId = #{userId}")
     OTP getOTP(long userId);
 
-    @Select("SELECT * FROM otp WHERE userId = #{id} AND code = #{code}")
+    @Select("SELECT * FROM otp WHERE userId = #{userId} AND code = #{code}")
     OTP getVerifyOTP(long userId, String code);
 
-    @Insert("INSERT INTO otp (userId, code, createdAt, updatedAt) VALUES (#{userId}, #{code}, NOW(), NOW())")
+    @Insert("INSERT INTO otp (userId, code, createdAt, updatedAt) VALUES (#{userId}, #{code}, #{createdAt}, #{updatedAt})")
     void createOTP(OTP otp);
 
-    @Update("UPDATE otp SET code = #{code}, updatedAt = NOW() WHERE userId = #{userId}")
+    @Update("UPDATE otp SET code = #{code}, updatedAt = #{updatedAt} WHERE userId = #{userId}")
     void updateOTP(OTP otp);
 }
