@@ -113,6 +113,11 @@ public class RPCServer {
                             OTP verifyOTPResponse = otpService.verifyOTP(otpRequest.getId(), otpRequest.getCode());
                             response = objectMapper.writeValueAsString(verifyOTPResponse);
                             break;
+                        case "changePin":
+                            VerifyPinRequest pin = objectMapper.readValue(message, VerifyPinRequest.class);
+                            User changePinResponse = userService.changePin(pin.getId(), pin.getPin());
+                            response = objectMapper.writeValueAsString(changePinResponse);
+                            break;
                         default:
                             response = "Unknown service method";
                             break;

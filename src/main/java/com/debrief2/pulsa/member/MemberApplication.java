@@ -1,11 +1,6 @@
 package com.debrief2.pulsa.member;
 
-import com.debrief2.pulsa.member.payload.request.BalanceRequest;
-import com.debrief2.pulsa.member.payload.request.UserRequest;
-import com.debrief2.pulsa.member.payload.request.VerifyPinRequest;
-import com.debrief2.pulsa.member.utils.rpc.RPCClient;
 import com.debrief2.pulsa.member.utils.rpc.RPCServer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -14,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MemberApplication implements CommandLineRunner {
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Autowired
   RPCServer rpcServer;
@@ -39,6 +32,7 @@ public class MemberApplication implements CommandLineRunner {
     rpcServer.run("sendOTP");
     rpcServer.run("getOTP");
     rpcServer.run("verifyOTP");
+    rpcServer.run("changePin");
   }
 
 }
