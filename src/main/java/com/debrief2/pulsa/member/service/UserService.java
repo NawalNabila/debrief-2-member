@@ -14,7 +14,7 @@ public interface UserService {
     UserResponse getProfile(long id) throws ServiceException;
     void createBalance(long id);
     long getBalance(long id) throws ServiceException;
-    User changePin(long id, int pin);
+    User changePin(long id, int pin) throws ServiceException;
     void decreaseBalance(long id, long value);
     void increaseBalance(long id, long value);
 }

@@ -115,8 +115,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changePin(long id, int pin) {
-        return null;
+    public User changePin(long id, int pin) throws ServiceException {
+        //validate pin
+        if (!validation.pin(Integer.toString(pin))){
+            throw new ServiceException("invalid pin");
+        }
+
+        UserResponse user = userMapper.getUserById(id);
+        if (user != null) {
+            userMapper.updatePin(user.getId(), pin);
+            throw new ServiceException("updated");
+        } else {
+            throw new ServiceException("user not found");
+        }
     }
 
     @Override
