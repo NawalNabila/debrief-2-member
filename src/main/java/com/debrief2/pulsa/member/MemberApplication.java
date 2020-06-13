@@ -22,17 +22,17 @@ public class MemberApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    rpcServer.run("register");
+//    rpcServer.run("register");
     rpcServer.run("login");
-    rpcServer.run("verifyPin");
+//    rpcServer.run("verifyPin");
     rpcServer.run("getProfile");
     rpcServer.run("getBalance");
-    rpcServer.run("decreaseBalance");
-    rpcServer.run("increaseBalance");
-    rpcServer.run("sendOTP");
+//    rpcServer.run("decreaseBalance");
+//    rpcServer.run("increaseBalance");
+//    rpcServer.run("sendOTP");
     rpcServer.run("getOTP");
-    rpcServer.run("verifyOTP");
-    rpcServer.run("changePin");
+//    rpcServer.run("verifyOTP");
+//    rpcServer.run("changePin");
   }
 
 }
