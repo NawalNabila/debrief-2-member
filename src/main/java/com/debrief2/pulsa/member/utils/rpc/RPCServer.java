@@ -139,6 +139,8 @@ public class RPCServer {
                 synchronized (monitor) {
                     try {
                         monitor.wait();
+                        channel.close();
+                        connection.close();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
