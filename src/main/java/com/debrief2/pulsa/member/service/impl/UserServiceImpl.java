@@ -131,12 +131,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void decreaseBalance(long id, long value) {
+    public User decreaseBalance(long id, long value) throws ServiceException {
+        UserResponse userResponse = userMapper.getUserById(id);
+        if (userResponse == null)
+            throw new ServiceException("user not found");
+
+        long balance = balanceMapper.getBalance(id);
+        if (balance < value)
+            throw new ServiceException("not enough balance");
+
         balanceMapper.decreaseBalance(id, value);
+        throw new ServiceException("success");
     }
 
     @Override
-    public void increaseBalance(long id, long value) {
+    public User increaseBalance(long id, long value) throws ServiceException {
+        UserResponse userResponse = userMapper.getUserById(id);
+        if (userResponse == null)
+            throw new ServiceException("user not found");
+
         balanceMapper.increaseBalance(id, value);
+        throw new ServiceException("success");
     }
 }
