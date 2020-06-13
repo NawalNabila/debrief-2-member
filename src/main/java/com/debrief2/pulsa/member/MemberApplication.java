@@ -23,13 +23,9 @@ public class MemberApplication implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     rpcServer.run("register");
-    rpcServer.run("register");
-    rpcServer.run("login");
     rpcServer.run("login");
     rpcServer.run("verifyPin");
     rpcServer.run("getProfile");
-    rpcServer.run("getProfile");
-    rpcServer.run("getBalance");
     rpcServer.run("getBalance");
     rpcServer.run("decreaseBalance");
     rpcServer.run("increaseBalance");
