@@ -7,6 +7,7 @@ import com.debrief2.pulsa.member.payload.request.BalanceRequest;
 import com.debrief2.pulsa.member.payload.request.OTPRequest;
 import com.debrief2.pulsa.member.payload.request.UserRequest;
 import com.debrief2.pulsa.member.payload.request.VerifyPinRequest;
+import com.debrief2.pulsa.member.payload.response.OTPResponse;
 import com.debrief2.pulsa.member.payload.response.UserResponse;
 import com.debrief2.pulsa.member.service.OTPService;
 import com.debrief2.pulsa.member.service.UserService;
@@ -101,16 +102,16 @@ public class RPCServer {
                             response = objectMapper.writeValueAsString("success");
                             break;
                         case "sendOTP":
-                            OTP otpResponse = otpService.sendOTP(Long.parseLong(message));
+                            OTPResponse otpResponse = otpService.sendOTP(Long.parseLong(message));
                             response = objectMapper.writeValueAsString(otpResponse);
                             break;
                         case "getOTP":
-                            OTP getOTPResponse = otpService.getOTP(Long.parseLong(message));
+                            OTPResponse getOTPResponse = otpService.getOTP(Long.parseLong(message));
                             response = objectMapper.writeValueAsString(getOTPResponse);
                             break;
                         case "verifyOTP":
                             OTPRequest otpRequest = objectMapper.readValue(message, OTPRequest.class);
-                            OTP verifyOTPResponse = otpService.verifyOTP(otpRequest.getId(), otpRequest.getCode());
+                            OTPResponse verifyOTPResponse = otpService.verifyOTP(otpRequest.getId(), otpRequest.getCode());
                             response = objectMapper.writeValueAsString(verifyOTPResponse);
                             break;
                         case "changePin":

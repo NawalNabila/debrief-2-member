@@ -1,6 +1,7 @@
 package com.debrief2.pulsa.member.repository;
 
 import com.debrief2.pulsa.member.model.OTP;
+import com.debrief2.pulsa.member.payload.response.OTPResponse;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Repository;
 public interface OTPMapper {
     @Select("SELECT * FROM otp WHERE userId = #{userId}")
     OTP getOTP(long userId);
+
+    @Select("SELECT * FROM otp WHERE userId = #{userId}")
+    OTPResponse getOTPResponse(long userId);
 
     @Select("SELECT * FROM otp WHERE userId = #{userId} AND code = #{code}")
     OTP getVerifyOTP(long userId, String code);

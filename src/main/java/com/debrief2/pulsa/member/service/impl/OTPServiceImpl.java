@@ -2,6 +2,7 @@ package com.debrief2.pulsa.member.service.impl;
 
 import com.debrief2.pulsa.member.exception.ServiceException;
 import com.debrief2.pulsa.member.model.OTP;
+import com.debrief2.pulsa.member.payload.response.OTPResponse;
 import com.debrief2.pulsa.member.payload.response.UserResponse;
 import com.debrief2.pulsa.member.repository.OTPMapper;
 import com.debrief2.pulsa.member.repository.UserMapper;
@@ -47,7 +48,7 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public OTP sendOTP(long userId) throws ServiceException {
+    public OTPResponse sendOTP(long userId) throws ServiceException {
         UserResponse userResponse = userMapper.getUserById(userId);
         if (userResponse == null)
             throw new ServiceException("user not found");
@@ -63,7 +64,7 @@ public class OTPServiceImpl implements OTPService {
                 TwillioSMS twilioSMS = new TwillioSMS();
                 twilioSMS.send(myTwilioPhoneNumber, twilioAccountSid, twilioAuthToken, phone, otp.getCode());
                 updateOTP(otp);
-                return otp;
+                return otpMapper.getOTPResponse(userResponse.getId());
             } catch (ApiException | AuthenticationException e) {
                 //twilio free can only send to verified number
                 throw new ServiceException("unverified number");
@@ -79,7 +80,7 @@ public class OTPServiceImpl implements OTPService {
                 TwillioSMS twilioSMS = new TwillioSMS();
                 twilioSMS.send(myTwilioPhoneNumber, twilioAccountSid, twilioAuthToken, phone, new_otp.getCode());
                 createOTP(new_otp);
-                return new_otp;
+                return otpMapper.getOTPResponse(userResponse.getId());
             } catch (ApiException | AuthenticationException e) {
                 //twilio free can only send to verified number
                 throw new ServiceException("unverified number");
@@ -88,7 +89,7 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public OTP getOTP(long userId) throws ServiceException {
+    public OTPResponse getOTP(long userId) throws ServiceException {
         UserResponse user = userMapper.getUserById(userId);
         if (user == null)
             throw new ServiceException("user not found");
@@ -96,11 +97,11 @@ public class OTPServiceImpl implements OTPService {
         OTP otp = otpMapper.getOTP(user.getId());
         if (otp == null)
             throw new ServiceException("OTP not found");
-        return otp;
+        return otpMapper.getOTPResponse(user.getId());
     }
 
     @Override
-    public OTP verifyOTP(long userId, String code) throws ServiceException {
+    public OTPResponse verifyOTP(long userId, String code) throws ServiceException {
         //validate OTP
         if (!validation.otp(code)){
             throw new ServiceException("invalid OTP");
@@ -115,6 +116,6 @@ public class OTPServiceImpl implements OTPService {
             throw new ServiceException("OTP expired");
         }
 
-        return otp;
+        return otpMapper.getOTPResponse(userId);
     }
 }
