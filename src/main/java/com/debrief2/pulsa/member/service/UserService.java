@@ -10,11 +10,11 @@ public interface UserService {
     UserResponse getByUsername(String username);
     UserResponse register(UserRequest userRequest) throws ServiceException;
     UserResponse login(String phone) throws ServiceException;
-    UserResponse verifyPin(long id, int pin) throws ServiceException;
+    UserResponse verifyPin(long id, String pin) throws ServiceException;
     UserResponse getProfile(long id) throws ServiceException;
     void createBalance(long id);
     long getBalance(long id) throws ServiceException;
-    User changePin(long id, int pin) throws ServiceException;
+    User changePin(long id, String pin) throws ServiceException;
     User decreaseBalance(long id, long value) throws ServiceException;
     User increaseBalance(long id, long value) throws ServiceException;
 }

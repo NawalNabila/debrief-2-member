@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VerifyPinRequest {
     private long id;
-    private int pin;
+    private String pin;
 }

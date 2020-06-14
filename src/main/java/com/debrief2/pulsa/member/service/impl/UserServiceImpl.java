@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //validate pin
-        if (!validation.pin(Integer.toString(user.getPin()))){
+        if (!validation.pin(user.getPin())){
             throw new ServiceException("invalid pin");
         }
 
@@ -86,9 +86,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse verifyPin(long id, int pin) throws ServiceException {
+    public UserResponse verifyPin(long id, String pin) throws ServiceException {
         //validate pin
-        if (!validation.pin(Integer.toString(pin))){
+        if (!validation.pin(pin)){
             throw new ServiceException("invalid pin");
         }
 
@@ -115,9 +115,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changePin(long id, int pin) throws ServiceException {
+    public User changePin(long id, String pin) throws ServiceException {
         //validate pin
-        if (!validation.pin(Integer.toString(pin))){
+        if (!validation.pin(pin)){
             throw new ServiceException("invalid pin");
         }
 

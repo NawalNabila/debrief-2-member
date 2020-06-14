@@ -23,11 +23,11 @@ public interface UserMapper {
     UserResponse getUserByUsername(String username);
 
     @Select("SELECT * FROM user WHERE id = #{id} AND pin = #{pin}")
-    UserResponse getPin(long id, int pin);
+    UserResponse getPin(long id, String pin);
 
     @Select("SELECT * FROM user WHERE id = #{id}")
     UserResponse getUserById(long id);
 
     @Update("UPDATE user SET pin = #{pin}, updatedAt = NOW() WHERE id = #{id}")
-    void updatePin(long id, int pin);
+    void updatePin(long id, String pin);
 }

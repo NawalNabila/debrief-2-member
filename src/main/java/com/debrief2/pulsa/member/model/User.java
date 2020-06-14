@@ -16,7 +16,7 @@ public class User {
     private String name;
     private String email;
     private String username;
-    private int pin;
+    private String pin;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
