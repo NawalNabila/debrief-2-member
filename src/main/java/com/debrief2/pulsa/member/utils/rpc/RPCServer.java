@@ -12,6 +12,7 @@ import com.debrief2.pulsa.member.payload.response.UserResponse;
 import com.debrief2.pulsa.member.service.OTPService;
 import com.debrief2.pulsa.member.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.rabbitmq.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,6 +126,8 @@ public class RPCServer {
                     }
                 } catch (ServiceException serviceException) {
                     response = serviceException.getMessage();
+                } catch (InvalidFormatException |NumberFormatException e) {
+                    response = "invalid request format";
                 }
 
                 channel.basicPublish("", delivery.getProperties().getReplyTo(), replyProps, response.getBytes(StandardCharsets.UTF_8));

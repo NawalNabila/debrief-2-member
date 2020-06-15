@@ -10,16 +10,6 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 public class ExecutorConfig {
-    @Bean(name = "asyncExecutor")
-    public Executor asyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(1000);
-        executor.setThreadNamePrefix("Async-");
-        executor.initialize();
-        return executor;
-    }
 
     @Bean(name = "workerExecutor")
     public Executor workerExecutor() {
