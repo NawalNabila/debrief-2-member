@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse verifyPin(long id, String pin) throws ServiceException, NullPointerException {
 
         if(id == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         if(pin == null)
             throw new NullPointerException("pin should not be empty");
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getProfile(long id) throws ServiceException, NullPointerException{
         if(id == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public long getBalance(long id) throws ServiceException, NullPointerException{
         if(id == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User changePin(long id, String pin) throws ServiceException, NullPointerException {
         if(id == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         if(pin == null)
             throw new NullPointerException("pin should not be empty");
@@ -193,7 +193,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User decreaseBalance(long id, long value) throws ServiceException, NullPointerException{
         if(id == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User increaseBalance(long id, long value) throws ServiceException, NullPointerException {
         if(id == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)

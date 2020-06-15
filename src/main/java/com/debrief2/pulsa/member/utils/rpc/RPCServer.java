@@ -94,13 +94,13 @@ public class RPCServer {
                             break;
                         case "decreaseBalance":
                             BalanceRequest decreaseRequest = objectMapper.readValue(message, BalanceRequest.class);
-                            userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
-                            response = objectMapper.writeValueAsString("success");
+                            User decrease = userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
+                            response = objectMapper.writeValueAsString(decrease);
                             break;
                         case "increaseBalance":
                             BalanceRequest increaseRequest = objectMapper.readValue(message, BalanceRequest.class);
-                            userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
-                            response = objectMapper.writeValueAsString("success");
+                            User increase = userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
+                            response = objectMapper.writeValueAsString(increase);
                             break;
                         case "sendOTP":
                             OTPResponse otpResponse = otpService.sendOTP(Long.parseLong(message));

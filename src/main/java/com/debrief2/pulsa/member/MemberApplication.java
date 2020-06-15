@@ -1,7 +1,5 @@
 package com.debrief2.pulsa.member;
 
-import com.debrief2.pulsa.member.payload.request.UserRequest;
-import com.debrief2.pulsa.member.utils.rpc.RPCClient;
 import com.debrief2.pulsa.member.utils.rpc.RPCServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ public class MemberApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    rpcServer.run("register");
     rpcServer.run("register");
     rpcServer.run("login");
     rpcServer.run("login");

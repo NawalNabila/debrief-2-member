@@ -50,7 +50,7 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public OTPResponse sendOTP(long userId) throws ServiceException, NullPointerException {
         if(userId == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         UserResponse userResponse = userMapper.getUserById(userId);
         if (userResponse == null)
@@ -94,7 +94,7 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public OTPResponse getOTP(long userId) throws ServiceException, NullPointerException {
         if(userId == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         UserResponse user = userMapper.getUserById(userId);
         if (user == null)
@@ -109,7 +109,7 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public OTPResponse verifyOTP(long userId, String code) throws ServiceException, NullPointerException {
         if(userId == 0)
-            throw new NullPointerException("id should not be Zero");
+            throw new NullPointerException("id should not be empty");
 
         if(code == null)
             throw new NullPointerException("OTP code should not be empty");
