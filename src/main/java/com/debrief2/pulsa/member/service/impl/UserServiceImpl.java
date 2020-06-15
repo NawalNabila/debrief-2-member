@@ -44,7 +44,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse register(UserRequest user) throws ServiceException {
+    public UserResponse register(UserRequest user) throws ServiceException, NullPointerException {
+
+        String name = user.getName();
+        String email = user.getEmail();
+        String username = user.getPhone();
+        String pin = user.getPin();
+
+        if(name == null)
+            throw new NullPointerException("Name should not be empty");
+        name = name.trim();
+        if (name.length() == 0)
+            throw new NullPointerException("Name should not be empty");
+
+        if(email == null)
+            throw new NullPointerException("Email should not be empty");
+        email = email.trim();
+        if (email.length() == 0)
+            throw new NullPointerException("Email should not be empty");
+
+        if(username == null)
+            throw new NullPointerException("phone number should not be empty");
+        username = username.trim();
+        if (username.length() == 0)
+            throw new NullPointerException("phone number should not be empty");
+
+        if(pin == null)
+            throw new NullPointerException("pin should not be empty");
+        pin = pin.trim();
+        if (pin.length() == 0)
+            throw new NullPointerException("pin should not be empty");
 
         //validate email
         if(!validation.email(user.getEmail())) {
@@ -72,7 +101,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse login(String phone) throws ServiceException {
+    public UserResponse login(String phone) throws ServiceException, NullPointerException{
+        if(phone == null)
+            throw new NullPointerException("phone number should not be empty");
+        phone = phone.trim();
+        if (phone.length() == 0)
+            throw new NullPointerException("phone number should not be empty");
+
         //convert & validate phone
         phone = validation.convertPhone(phone);
         if (!validation.phone(phone)) {
@@ -86,7 +121,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse verifyPin(long id, String pin) throws ServiceException {
+    public UserResponse verifyPin(long id, String pin) throws ServiceException, NullPointerException {
+
+        if(id == 0)
+            throw new NullPointerException("id should not be Zero");
+
+        if(pin == null)
+            throw new NullPointerException("pin should not be empty");
+        pin = pin.trim();
+        if (pin.length() == 0)
+            throw new NullPointerException("pin should not be empty");
+
         //validate pin
         if (!validation.pin(pin)){
             throw new ServiceException("invalid pin");
@@ -99,7 +144,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getProfile(long id) throws ServiceException{
+    public UserResponse getProfile(long id) throws ServiceException, NullPointerException{
+        if(id == 0)
+            throw new NullPointerException("id should not be Zero");
+
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
             throw new ServiceException("user not found");
@@ -107,7 +155,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long getBalance(long id) throws ServiceException{
+    public long getBalance(long id) throws ServiceException, NullPointerException{
+        if(id == 0)
+            throw new NullPointerException("id should not be Zero");
+
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
             throw new ServiceException("user not found");
@@ -115,7 +166,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changePin(long id, String pin) throws ServiceException {
+    public User changePin(long id, String pin) throws ServiceException, NullPointerException {
+        if(id == 0)
+            throw new NullPointerException("id should not be Zero");
+
+        if(pin == null)
+            throw new NullPointerException("pin should not be empty");
+        pin = pin.trim();
+        if (pin.length() == 0)
+            throw new NullPointerException("pin should not be empty");
+
         //validate pin
         if (!validation.pin(pin)){
             throw new ServiceException("invalid pin");
@@ -131,7 +191,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User decreaseBalance(long id, long value) throws ServiceException {
+    public User decreaseBalance(long id, long value) throws ServiceException, NullPointerException{
+        if(id == 0)
+            throw new NullPointerException("id should not be Zero");
+
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
             throw new ServiceException("user not found");
@@ -145,7 +208,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User increaseBalance(long id, long value) throws ServiceException {
+    public User increaseBalance(long id, long value) throws ServiceException, NullPointerException {
+        if(id == 0)
+            throw new NullPointerException("id should not be Zero");
+
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
             throw new ServiceException("user not found");

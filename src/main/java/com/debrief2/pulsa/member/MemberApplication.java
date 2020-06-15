@@ -42,7 +42,6 @@ public class MemberApplication implements CommandLineRunner {
     rpcServer.run("getOTP");
     rpcServer.run("verifyOTP");
     rpcServer.run("changePin");
-
   }
 
 }

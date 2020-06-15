@@ -124,9 +124,9 @@ public class RPCServer {
                             response = "Unknown service method";
                             break;
                     }
-                } catch (ServiceException serviceException) {
-                    response = serviceException.getMessage();
-                } catch (InvalidFormatException |NumberFormatException e) {
+                } catch (ServiceException | NullPointerException exception) {
+                    response = exception.getMessage();
+                } catch (InvalidFormatException | NumberFormatException e) {
                     response = "invalid request format";
                 }
 

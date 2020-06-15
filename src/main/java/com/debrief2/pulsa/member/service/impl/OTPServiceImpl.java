@@ -48,7 +48,10 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public OTPResponse sendOTP(long userId) throws ServiceException {
+    public OTPResponse sendOTP(long userId) throws ServiceException, NullPointerException {
+        if(userId == 0)
+            throw new NullPointerException("id should not be Zero");
+
         UserResponse userResponse = userMapper.getUserById(userId);
         if (userResponse == null)
             throw new ServiceException("user not found");
@@ -89,7 +92,10 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public OTPResponse getOTP(long userId) throws ServiceException {
+    public OTPResponse getOTP(long userId) throws ServiceException, NullPointerException {
+        if(userId == 0)
+            throw new NullPointerException("id should not be Zero");
+
         UserResponse user = userMapper.getUserById(userId);
         if (user == null)
             throw new ServiceException("user not found");
@@ -101,7 +107,16 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public OTPResponse verifyOTP(long userId, String code) throws ServiceException {
+    public OTPResponse verifyOTP(long userId, String code) throws ServiceException, NullPointerException {
+        if(userId == 0)
+            throw new NullPointerException("id should not be Zero");
+
+        if(code == null)
+            throw new NullPointerException("OTP code should not be empty");
+        code = code.trim();
+        if (code.length() == 0)
+            throw new NullPointerException("OTP code should not be empty");
+
         //validate OTP
         if (!validation.otp(code)){
             throw new ServiceException("invalid OTP");
