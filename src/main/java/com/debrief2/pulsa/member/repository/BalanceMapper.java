@@ -1,5 +1,6 @@
 package com.debrief2.pulsa.member.repository;
 
+import com.debrief2.pulsa.member.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Repository;
 public interface BalanceMapper {
     @Insert("INSERT INTO balance (userId, balance, createdAt) VALUES (#{userId}, 15000000, NOW())")
     void createBalance(long userId);
+
+    @Select("SELECT * FROM balance WHERE userId = #{userId}")
+    User getUserInBalance(long userId);
 
     @Select("SELECT balance FROM balance WHERE userId = #{userId} FOR UPDATE")
     long getBalance(long userId);

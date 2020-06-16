@@ -162,7 +162,11 @@ public class UserServiceImpl implements UserService {
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
             throw new ServiceException("user not found");
-        return balanceMapper.getBalance(userResponse.getId());
+
+        User userInBalance = balanceMapper.getUserInBalance(id);
+        if (userInBalance ==  null)
+            throw new ServiceException("Bikin datanya di table balance dulu bang!");
+        return balanceMapper.getBalance(id);
     }
 
     @Override
