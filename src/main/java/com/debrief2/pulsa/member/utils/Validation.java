@@ -35,8 +35,7 @@ public class Validation {
     }
 
     public boolean validatePhone(String phone) throws ServiceException {
-        String phoneAfterConvert = convertPhone(phone);
-        if (phoneAfterConvert.length()<10||phoneAfterConvert.length()>14){
+        if (phone.length()<10||phone.length()>14){
             throw new ServiceException("invalid phone number");
         }
         try {
