@@ -75,21 +75,9 @@ public class UserServiceImpl implements UserService {
         if (pin.length() == 0)
             throw new NullPointerException("pin should not be empty");
 
-        //validate email
-        if(!validation.email(user.getEmail())) {
-            throw new ServiceException("invalid email");
-        }
+        //validate email, phone number and pin
+        validation.validateUser(email, username, pin);
 
-        //convert & validate phone
-        user.setPhone(validation.convertPhone(user.getPhone()));
-        if (!validation.phone(user.getPhone())) {
-            throw new ServiceException("invalid phone number");
-        }
-
-        //validate pin
-        if (!validation.pin(user.getPin())){
-            throw new ServiceException("invalid pin");
-        }
 
         //check email & phone duplication
         if (getByEmailOrUsername(user.getEmail()) != null || getByEmailOrUsername(user.getPhone()) != null) {
@@ -108,11 +96,8 @@ public class UserServiceImpl implements UserService {
         if (phone.length() == 0)
             throw new NullPointerException("phone number should not be empty");
 
-        //convert & validate phone
-        phone = validation.convertPhone(phone);
-        if (!validation.phone(phone)) {
-            throw new ServiceException("invalid phone number");
-        }
+        //validate phone
+        validation.validatePhone(phone);
 
         UserResponse userResponse = userMapper.getUserByUsername(phone);
         if (userResponse == null)
@@ -133,9 +118,7 @@ public class UserServiceImpl implements UserService {
             throw new NullPointerException("pin should not be empty");
 
         //validate pin
-        if (!validation.pin(pin)){
-            throw new ServiceException("invalid pin");
-        }
+        validation.validatePin(pin);
 
         UserResponse userResponse = userMapper.getPin(id, pin);
         if (userResponse == null)
@@ -181,9 +164,7 @@ public class UserServiceImpl implements UserService {
             throw new NullPointerException("pin should not be empty");
 
         //validate pin
-        if (!validation.pin(pin)){
-            throw new ServiceException("invalid pin");
-        }
+        validation.validatePin(pin);
 
         UserResponse user = userMapper.getUserById(id);
         if (user != null) {

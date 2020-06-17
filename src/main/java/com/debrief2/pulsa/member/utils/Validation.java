@@ -1,5 +1,6 @@
 package com.debrief2.pulsa.member.utils;
 
+import com.debrief2.pulsa.member.exception.ServiceException;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
@@ -9,35 +10,40 @@ public class Validation {
     final String emailRegex = ".+@.+\\..+";
     final String pinRegex = "^[1-9]{1}[0-9]{5}$";
 
-    public boolean email (String email) {
-        return Pattern.matches(emailRegex, email);
+    public boolean validateEmail (String email) throws ServiceException {
+        if (!Pattern.matches(emailRegex, email))
+            throw new ServiceException("invalid email");
+        return true;
     }
 
-    public boolean pin (String pin) {
-        return Pattern.matches(pinRegex, pin);
+    public boolean validatePin (String pin) throws ServiceException {
+        if (!Pattern.matches(pinRegex, pin))
+            throw new ServiceException("invalid pin");
+        return true;
     }
 
-    public boolean otp (String otp) {
+    public boolean validateOtp (String otp) throws ServiceException {
         if (otp.length()!=4){
-            return false;
+            throw new ServiceException("invalid OTP");
         }
         try {
             Long.parseLong(otp);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new ServiceException("invalid OTP");
         }
     }
 
-    public boolean phone(String phone) {
-        if (phone.length()<10||phone.length()>14){
-            return false;
+    public boolean validatePhone(String phone) throws ServiceException {
+        String phoneAfterConvert = convertPhone(phone);
+        if (phoneAfterConvert.length()<10||phoneAfterConvert.length()>14){
+            throw new ServiceException("invalid phone number");
         }
         try {
             Long.parseLong(phone);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new ServiceException("invalid phone number");
         }
     }
 
@@ -49,5 +55,14 @@ public class Validation {
             return "62" + phone.substring(1);
         }
         return phone;
+    }
+
+    public boolean validateUser(String emailUser, String phoneUser, String pinUser) throws ServiceException {
+        if (validateEmail(emailUser)) {
+            if (validatePhone(phoneUser)) {
+                validatePin(pinUser);
+            }
+        }
+        return true;
     }
 }

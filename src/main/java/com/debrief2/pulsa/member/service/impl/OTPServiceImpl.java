@@ -118,9 +118,7 @@ public class OTPServiceImpl implements OTPService {
             throw new NullPointerException("OTP code should not be empty");
 
         //validate OTP
-        if (!validation.otp(code)){
-            throw new ServiceException("invalid OTP");
-        }
+        validation.validateOtp(code);
 
         OTP otp = otpMapper.getVerifyOTP(userId, code);
         if (otp == null)
