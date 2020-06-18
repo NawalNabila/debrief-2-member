@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
             throw new NullPointerException("pin should not be empty");
 
         //convert phone number
-        String usernameAfterConvert = (validation.convertPhone(username));
+        String usernameAfterConvert = validation.convertPhone(username);
 
         //validate email, phone number and pin
         validation.validateUser(email, usernameAfterConvert, pin);
@@ -99,10 +99,13 @@ public class UserServiceImpl implements UserService {
         if (phone.length() == 0)
             throw new NullPointerException("phone number should not be empty");
 
-        //validate phone
-        validation.validatePhone(phone);
+        //convert phone number
+        String username = validation.convertPhone(phone);
 
-        UserResponse userResponse = userMapper.getUserByUsername(phone);
+        //validate phone
+        validation.validatePhone(username);
+
+        UserResponse userResponse = userMapper.getUserByUsername(username);
         if (userResponse == null)
             throw new ServiceException("incorrect phone number");
         return userResponse;
