@@ -100,10 +100,10 @@ public class OTPServiceImpl implements OTPService {
         if (user == null)
             throw new ServiceException("user not found");
 
-        OTP otp = otpMapper.getOTP(user.getId());
+        OTPResponse otp = otpMapper.getOTPResponse(user.getId());
         if (otp == null)
             throw new ServiceException("OTP not found");
-        return otpMapper.getOTPResponse(user.getId());
+        return otp;
     }
 
     @Override

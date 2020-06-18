@@ -11,6 +11,7 @@ import com.debrief2.pulsa.member.payload.response.OTPResponse;
 import com.debrief2.pulsa.member.payload.response.UserResponse;
 import com.debrief2.pulsa.member.service.OTPService;
 import com.debrief2.pulsa.member.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.rabbitmq.client.*;
@@ -21,9 +22,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeoutException;
 
 @Component
 public class RPCServer {
@@ -97,11 +100,6 @@ public class RPCServer {
                             User decrease = userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
                             response = objectMapper.writeValueAsString(decrease);
                             break;
-                        case "increaseBalance":
-                            BalanceRequest increaseRequest = objectMapper.readValue(message, BalanceRequest.class);
-                            User increase = userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
-                            response = objectMapper.writeValueAsString(increase);
-                            break;
                         case "sendOTP":
                             OTPResponse otpResponse = otpService.sendOTP(Long.parseLong(message));
                             response = objectMapper.writeValueAsString(otpResponse);
@@ -150,5 +148,44 @@ public class RPCServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Async("workerExecutor")
+    public void runPersistent(String queueName) throws URISyntaxException, IOException, TimeoutException {
+        final URI rabbitMqUrl = new URI(url);
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
+        factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
+        factory.setHost(rabbitMqUrl.getHost());
+        factory.setPort(rabbitMqUrl.getPort());
+        factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
+
+        final Connection connection = factory.newConnection();
+        final Channel channel = connection.createChannel();
+
+        channel.queueDeclare(queueName, true, false, false, null);
+        log.info("["+queueName+"] Awaiting requests");
+
+        channel.basicQos(1);
+
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+
+            log.info("["+queueName+"] receiving request for "+message);
+            try {
+                switch (queueName){
+                    case "increaseBalance":
+                        BalanceRequest increaseRequest = objectMapper.readValue(message, BalanceRequest.class);
+                        userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
+                        break;
+                    default:
+                        break;
+                }
+            } catch (ServiceException | NumberFormatException | JsonProcessingException ignored) {
+            }
+            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+        };
+        channel.basicConsume(queueName, false, deliverCallback, consumerTag -> { });
     }
 }
