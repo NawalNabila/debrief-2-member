@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@Transactional(rollbackFor = ServiceException.class)
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -32,15 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createBalance(String username) {
-        UserResponse user = userMapper.getUserByUsername(username);
-        if (user != null) {
-            balanceMapper.createBalance(user.getId());
-        }
-        return user;
-    }
-
-    @Override
+    @Transactional(rollbackFor = ServiceException.class)
     public UserResponse register(UserRequest user) throws ServiceException, NullPointerException {
 
         String name = user.getName();
@@ -80,17 +71,24 @@ public class UserServiceImpl implements UserService {
 
 
         //check email & phone duplication
-        if (getByEmailOrUsername(email) != null || getByEmailOrUsername(usernameAfterConvert) != null) {
+        if (getByEmailOrUsername(email) != null || getByEmailOrUsername(usernameAfterConvert) != null)
             throw new ServiceException("user already exist");
-        }
 
         UserRequest request = new UserRequest();
         request.setName(name);
         request.setEmail(email);
         request.setPhone(usernameAfterConvert);
         request.setPin(pin);
+
         userMapper.createUser(request);
-        return createBalance(usernameAfterConvert);
+
+        UserResponse response = userMapper.getUserByUsername(usernameAfterConvert);
+        if (response == null)
+            throw new ServiceException("user not found, can not create balance");
+
+        balanceMapper.createBalance(response.getId());
+
+        return response;
     }
 
     @Override
@@ -110,6 +108,7 @@ public class UserServiceImpl implements UserService {
         UserResponse userResponse = userMapper.getUserByUsername(username);
         if (userResponse == null)
             throw new ServiceException("incorrect phone number");
+
         return userResponse;
     }
 
@@ -131,6 +130,7 @@ public class UserServiceImpl implements UserService {
         UserResponse userResponse = userMapper.getPin(id, pin);
         if (userResponse == null)
             throw new ServiceException("incorrect pin");
+
         return userResponse;
     }
 
@@ -142,6 +142,7 @@ public class UserServiceImpl implements UserService {
         UserResponse userResponse = userMapper.getUserById(id);
         if (userResponse == null)
             throw new ServiceException("user not found");
+
         return userResponse;
     }
 
@@ -157,11 +158,12 @@ public class UserServiceImpl implements UserService {
         User userInBalance = balanceMapper.getUserInBalance(id);
         if (userInBalance ==  null)
             throw new ServiceException("Bikin datanya di table balance dulu bang!");
+
         return balanceMapper.getBalance(id);
     }
 
     @Override
-    public User changePin(long id, String pin) throws ServiceException, NullPointerException {
+    public String changePin(long id, String pin) throws ServiceException, NullPointerException {
         if(id == 0)
             throw new NullPointerException("id should not be empty");
 
@@ -175,16 +177,16 @@ public class UserServiceImpl implements UserService {
         validation.validatePin(pin);
 
         UserResponse user = userMapper.getUserById(id);
-        if (user != null) {
-            userMapper.updatePin(user.getId(), pin);
-            throw new ServiceException("updated");
-        } else {
+        if (user == null)
             throw new ServiceException("user not found");
-        }
+
+        userMapper.updatePin(user.getId(), pin);
+
+        return "updated";
     }
 
     @Override
-    public User decreaseBalance(long id, long value) throws ServiceException, NullPointerException{
+    public String decreaseBalance(long id, long value) throws ServiceException, NullPointerException{
         if(id == 0)
             throw new NullPointerException("id should not be empty");
 
@@ -200,11 +202,12 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("not enough balance");
 
         balanceMapper.decreaseBalance(id, value);
-        throw new ServiceException("success");
+
+        return "success";
     }
 
     @Override
-    public User increaseBalance(long id, long value) throws ServiceException, NullPointerException {
+    public String increaseBalance(long id, long value) throws ServiceException, NullPointerException {
         if(id == 0)
             throw new NullPointerException("id should not be empty");
 
@@ -216,6 +219,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("user not found");
 
         balanceMapper.increaseBalance(id, value);
-        throw new ServiceException("success");
+
+        return "success";
     }
 }

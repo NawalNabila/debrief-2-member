@@ -64,8 +64,8 @@ public class OTPServiceImpl implements OTPService {
                 //update OTP user
                 otp.setUpdatedAt(LocalDateTime.now().plusHours(7));
                 otp.setCode(generator.generateOtp());
-                TwillioSMS twilioSMS = new TwillioSMS();
-                twilioSMS.send(myTwilioPhoneNumber, twilioAccountSid, twilioAuthToken, phone, otp.getCode());
+                TwillioSMS twillioSMS = new TwillioSMS();
+                twillioSMS.send(myTwilioPhoneNumber, twilioAccountSid, twilioAuthToken, phone, otp.getCode());
                 updateOTP(otp);
                 return otpMapper.getOTPResponse(userResponse.getId());
             } catch (ApiException | AuthenticationException e) {
@@ -80,8 +80,8 @@ public class OTPServiceImpl implements OTPService {
                 new_otp.setCreatedAt(LocalDateTime.now().plusHours(7));
                 new_otp.setUpdatedAt(LocalDateTime.now().plusHours(7));
                 new_otp.setCode(generator.generateOtp());
-                TwillioSMS twilioSMS = new TwillioSMS();
-                twilioSMS.send(myTwilioPhoneNumber, twilioAccountSid, twilioAuthToken, phone, new_otp.getCode());
+                TwillioSMS twillioSMS = new TwillioSMS();
+                twillioSMS.send(myTwilioPhoneNumber, twilioAccountSid, twilioAuthToken, phone, new_otp.getCode());
                 createOTP(new_otp);
                 return otpMapper.getOTPResponse(userResponse.getId());
             } catch (ApiException | AuthenticationException e) {

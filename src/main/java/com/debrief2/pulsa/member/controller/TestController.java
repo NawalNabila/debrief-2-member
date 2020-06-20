@@ -1,7 +1,6 @@
 package com.debrief2.pulsa.member.controller;
 
 import com.debrief2.pulsa.member.exception.ServiceException;
-import com.debrief2.pulsa.member.model.User;
 import com.debrief2.pulsa.member.payload.request.*;
 import com.debrief2.pulsa.member.payload.response.OTPResponse;
 import com.debrief2.pulsa.member.payload.response.UserResponse;
@@ -56,7 +55,7 @@ public class TestController {
                     break;
                 case "decreaseBalance":
                     BalanceRequest decreaseRequest = objectMapper.readValue(testerRequest.getMessage(), BalanceRequest.class);
-                    User decrease = userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
+                    String decrease = userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
                     response = objectMapper.writeValueAsString(decrease);
                     break;
                 case "increaseBalance":
@@ -78,7 +77,7 @@ public class TestController {
                     break;
                 case "changePin":
                     VerifyPinRequest pin = objectMapper.readValue(testerRequest.getMessage(), VerifyPinRequest.class);
-                    User changePinResponse = userService.changePin(pin.getId(), pin.getPin());
+                    String changePinResponse = userService.changePin(pin.getId(), pin.getPin());
                     response = objectMapper.writeValueAsString(changePinResponse);
                     break;
                 default:

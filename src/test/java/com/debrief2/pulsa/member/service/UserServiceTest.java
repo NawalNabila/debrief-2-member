@@ -36,11 +36,8 @@ public class UserServiceTest {
     private static final long ID = 1;
     private static final String NAME = "Abigail";
     private static final String EMAIL = "abigail@dana.id";
-    private static final String INVALID_EMAIL = "abigail@dana";
     private static final String USERNAME = "082272068810";
-    private static final String INVALID_USERNAME = "08227206";
     private static final String PIN = "123456";
-    private static final String INVALID_PIN = "0123456";
     private static final LocalDateTime CREATED_AT = LocalDateTime.now();
     private static final long VALUE = 2000000;
     private static final long BALANCE = 15000000;
@@ -188,10 +185,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void registerInvalidEmailTest() {
+    public void registerFailedTest() {
         UserRequest request = UserRequest.builder()
                 .name(NAME)
-                .email(INVALID_EMAIL)
+                .email(EMAIL)
                 .phone(USERNAME)
                 .pin(PIN)
                 .build();
@@ -199,48 +196,12 @@ public class UserServiceTest {
 
         try {
             when(validation.convertPhone(USERNAME)).thenReturn(validUsername);
-            when(validation.validateUser(INVALID_EMAIL, validUsername, PIN)).thenReturn(false);
+            when(validation.validateUser(EMAIL, validUsername, PIN)).thenReturn(true);
+            when(userMapper.getUserByEmailOrUsername(EMAIL)).thenReturn(null);
+            when(userMapper.getUserByUsername(validUsername)).thenReturn(null);
             userService.register(request);
         } catch (ServiceException e) {
-            assert e.getMessage().equals("invalid email");
-        }
-    }
-
-    @Test
-    public void registerInvalidUsernameTest() {
-        UserRequest request = UserRequest.builder()
-                .name(NAME)
-                .email(EMAIL)
-                .phone(INVALID_USERNAME)
-                .pin(PIN)
-                .build();
-        String validUsername = "628227206";
-
-        try {
-            when(validation.convertPhone(INVALID_USERNAME)).thenReturn(validUsername);
-            when(validation.validateUser(EMAIL, validUsername, PIN)).thenReturn(false);
-            userService.register(request);
-        } catch (ServiceException e) {
-            assert e.getMessage().equals("invalid phone number");
-        }
-    }
-
-    @Test
-    public void registerInvalidPinTest() {
-        UserRequest request = UserRequest.builder()
-                .name(NAME)
-                .email(EMAIL)
-                .phone(USERNAME)
-                .pin(INVALID_PIN)
-                .build();
-        String validUsername = "6282272068810";
-
-        try {
-            when(validation.convertPhone(USERNAME)).thenReturn(validUsername);
-            when(validation.validateUser(EMAIL, validUsername, INVALID_PIN)).thenReturn(false);
-            userService.register(request);
-        } catch (ServiceException e) {
-            assert e.getMessage().equals("invalid pin");
+            assert e.getMessage().equals("user not found, can not create balance");
         }
     }
 
@@ -512,7 +473,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void changePinSuccessTest() {
+    public void changePinSuccessTest() throws ServiceException {
         UserResponse expected = UserResponse.builder()
                 .id(ID)
                 .name(NAME)
@@ -520,15 +481,12 @@ public class UserServiceTest {
                 .username("6282272068810")
                 .build();
 
-        try {
-            when(validation.validatePin(PIN)).thenReturn(true);
-            when(userMapper.getUserById(ID)).thenReturn(expected);
-            doNothing().when(userMapper).updatePin(ID, PIN);
-            userService.changePin(ID, PIN);
-        } catch (ServiceException e) {
-            assert e.getMessage().equals("updated");
-            verify(userMapper, times(1)).updatePin(ID, PIN);
-        }
+        when(validation.validatePin(PIN)).thenReturn(true);
+        when(userMapper.getUserById(ID)).thenReturn(expected);
+        doNothing().when(userMapper).updatePin(ID, PIN);
+        assert userService.changePin(ID, PIN).equals("updated");
+
+        verify(userMapper, times(1)).updatePin(ID, PIN);
     }
 
     @Test
@@ -578,7 +536,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void decreaseBalanceSuccessTest() {
+    public void decreaseBalanceSuccessTest() throws ServiceException {
         UserResponse expected = UserResponse.builder()
                 .id(ID)
                 .name(NAME)
@@ -586,15 +544,12 @@ public class UserServiceTest {
                 .username("6282272068810")
                 .build();
 
-        try {
-            when(userMapper.getUserById(ID)).thenReturn(expected);
-            when(balanceMapper.getBalance(ID)).thenReturn(BALANCE);
-            doNothing().when(balanceMapper).decreaseBalance(ID, VALUE);
-            userService.decreaseBalance(ID, VALUE);
-        } catch (ServiceException e) {
-            assert e.getMessage().equals("success");
-            verify(balanceMapper, times(1)).decreaseBalance(ID, VALUE);
-        }
+        when(userMapper.getUserById(ID)).thenReturn(expected);
+        when(balanceMapper.getBalance(ID)).thenReturn(BALANCE);
+        doNothing().when(balanceMapper).decreaseBalance(ID, VALUE);
+        assert  userService.decreaseBalance(ID, VALUE).equals("success");
+
+        verify(balanceMapper, times(1)).decreaseBalance(ID, VALUE);
     }
 
     @Test
@@ -626,7 +581,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void increaseBalanceSuccessTest() {
+    public void increaseBalanceSuccessTest() throws ServiceException {
         UserResponse expected = UserResponse.builder()
                 .id(ID)
                 .name(NAME)
@@ -634,13 +589,10 @@ public class UserServiceTest {
                 .username("6282272068810")
                 .build();
 
-        try {
-            when(userMapper.getUserById(ID)).thenReturn(expected);
-            doNothing().when(balanceMapper).increaseBalance(ID, VALUE);
-            userService.increaseBalance(ID, VALUE);
-        } catch (ServiceException e) {
-            assert e.getMessage().equals("success");
-            verify(balanceMapper, times(1)).increaseBalance(ID, VALUE);
-        }
+        when(userMapper.getUserById(ID)).thenReturn(expected);
+        doNothing().when(balanceMapper).increaseBalance(ID, VALUE);
+        assert userService.increaseBalance(ID, VALUE).equals("success");
+
+        verify(balanceMapper, times(1)).increaseBalance(ID, VALUE);
     }
 }

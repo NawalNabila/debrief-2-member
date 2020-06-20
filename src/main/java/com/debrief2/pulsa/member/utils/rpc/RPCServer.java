@@ -97,7 +97,7 @@ public class RPCServer {
                             break;
                         case "decreaseBalance":
                             BalanceRequest decreaseRequest = objectMapper.readValue(message, BalanceRequest.class);
-                            User decrease = userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
+                            String decrease = userService.decreaseBalance(decreaseRequest.getId(), decreaseRequest.getValue());
                             response = objectMapper.writeValueAsString(decrease);
                             break;
                         case "sendOTP":
@@ -115,7 +115,7 @@ public class RPCServer {
                             break;
                         case "changePin":
                             VerifyPinRequest pin = objectMapper.readValue(message, VerifyPinRequest.class);
-                            User changePinResponse = userService.changePin(pin.getId(), pin.getPin());
+                            String changePinResponse = userService.changePin(pin.getId(), pin.getPin());
                             response = objectMapper.writeValueAsString(changePinResponse);
                             break;
                         default:
