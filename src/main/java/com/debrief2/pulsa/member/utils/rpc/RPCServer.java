@@ -182,7 +182,7 @@ public class RPCServer {
                     default:
                         break;
                 }
-            } catch (ServiceException | NumberFormatException | JsonProcessingException ignored) {
+            } catch (Exception ignored) {
             }
             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         };
