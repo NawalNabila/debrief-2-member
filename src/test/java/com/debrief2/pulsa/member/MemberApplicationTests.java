@@ -10,4 +10,9 @@ class MemberApplicationTests {
   void contextLoads() {
   }
 
+  @Test
+  public void main() {
+    MemberApplication.main(new String[] {});
+  }
+
 }
