@@ -60,7 +60,8 @@ public class TestController {
                     break;
                 case "increaseBalance":
                     BalanceRequest increaseRequest = objectMapper.readValue(testerRequest.getMessage(), BalanceRequest.class);
-                    userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
+                    String increase = userService.increaseBalance(increaseRequest.getId(), increaseRequest.getValue());
+                    response = objectMapper.writeValueAsString(increase);
                     break;
                 case "sendOTP":
                     OTPResponse otpResponse = otpService.sendOTP(Long.parseLong(testerRequest.getMessage()));
