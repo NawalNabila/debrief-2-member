@@ -125,9 +125,12 @@ public class OTPServiceImpl implements OTPService {
             throw new ServiceException("incorrect OTP");
 
         //check whether already expired (lifetime of OTP code is 3m)
-        if (otp.getUpdatedAt().isBefore(LocalDateTime.now())) {
+        if (otp.getUpdatedAt().plusMinutes(3).isBefore(LocalDateTime.now())) {
             throw new ServiceException("OTP expired");
         }
+
+        System.out.println("Local: " + LocalDateTime.now());
+        System.out.println("DB: " + otp.getUpdatedAt());
 
         return otpMapper.getOTPResponse(userId);
     }
