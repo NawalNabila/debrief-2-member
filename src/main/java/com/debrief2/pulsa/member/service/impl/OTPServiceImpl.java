@@ -58,13 +58,12 @@ public class OTPServiceImpl implements OTPService {
 
         String phone = userResponse.getUsername();
 
-        if (phone == "628555222333") {
+        if (phone.equals("628555222333")) {
             OTP otpByPass = otpMapper.getOTP(userResponse.getId());
             if (otpByPass != null) {
                 //update OTP User
                 otpByPass.setUpdatedAt(LocalDateTime.now().plusHours(7));
                 updateOTP(otpByPass);
-                return otpMapper.getOTPResponse(userResponse.getId());
             } else {
                 //create OTP User
                 OTP createByPass = new OTP();
@@ -73,8 +72,8 @@ public class OTPServiceImpl implements OTPService {
                 createByPass.setCreatedAt(LocalDateTime.now().plusHours(7));
                 createByPass.setUpdatedAt(LocalDateTime.now().plusHours(7));
                 createOTP(createByPass);
-                return otpMapper.getOTPResponse(userResponse.getId());
             }
+            return otpMapper.getOTPResponse(userResponse.getId());
         }
 
         OTP otp = otpMapper.getOTP(userResponse.getId());
